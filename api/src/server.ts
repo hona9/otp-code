@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import { handler } from './middleware/error';
 import MainRouter from './startup/initRouter';
+import { StatusCodes } from 'http-status-codes';
 
 dotenv.config();
 
@@ -20,6 +21,12 @@ app.use(
   })
 );
 app.use(helmet());
+
+app.get('/', (req, res) => {
+  res.status(StatusCodes.OK).json({
+    status: 'success'
+  });
+});
 
 MainRouter(app);
 
