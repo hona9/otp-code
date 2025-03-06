@@ -10,11 +10,12 @@ export default function Home() {
   const [error, setError] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
+  const api = process.env.NEXT_PUBLIC_API_URL || "";
 
   // TanStack Query mutation
   const verifyCodeMutation = useMutation({
     mutationFn: async (verificationCode: string) => {
-      const response = await axios.post("http://localhost:5000/api/v1/verify", {
+      const response = await axios.post(`${api}/verify`, {
         code: verificationCode,
       });
       return response.data;
