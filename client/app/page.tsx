@@ -15,6 +15,7 @@ export default function Home() {
   // TanStack Query mutation
   const verifyCodeMutation = useMutation({
     mutationFn: async (verificationCode: string) => {
+      setVerificationStatus("verifying");
       const response = await axios.post(`${api}/verify`, {
         code: verificationCode,
       });
@@ -23,7 +24,7 @@ export default function Home() {
     onSuccess: async (data) => {
       if (data.status === "success") {
         setVerificationStatus("success");
-
+        await new Promise((resolve) => setTimeout(resolve, 400));
         router.replace("/success");
       }
     },
@@ -138,6 +139,24 @@ export default function Home() {
     debouncedMutation(code.join(""));
   };
 
+  // Add network status indicator
+  const [networkStatus, setNetworkStatus] = useState<
+    "online" | "offline" | "slow"
+  >("online");
+
+  useEffect(() => {
+    const handleOnline = () => setNetworkStatus("online");
+    const handleOffline = () => setNetworkStatus("offline");
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       <div
@@ -210,6 +229,17 @@ export default function Home() {
                 <p className="text-red-500 text-sm mb-4 animate-shake">
                   {errorMessage}
                 </p>
+              )}
+
+              {networkStatus !== "online" && (
+                <div
+                  className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md text-sm text-center"
+                  role="alert"
+                >
+                  {networkStatus === "offline"
+                    ? "You appear to be offline. Please check your connection."
+                    : "Your connection seems slow. Verification might take longer."}
+                </div>
               )}
 
               <button
