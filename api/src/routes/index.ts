@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import otpVerificationController from '../controllers/otpVerificationController';
 import { body } from 'express-validator';
+import { verifyRateLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
 router.post(
   '/verify',
+  verifyRateLimiter,
   [
     body('code')
       .isLength({ min: 6, max: 6 })

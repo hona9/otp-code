@@ -20,7 +20,7 @@ A small application for user verification where users input a 6-digit code. The 
 ### Backend
 
 - Express.js (with TypeScript)
-- AWS EC2 (for deployment)
+- Self Hosted (for deployment)
 
 ## Setup Instructions
 
@@ -84,4 +84,4 @@ A small application for user verification where users input a 6-digit code. The 
 ## Deployment
 
 - **Frontend:** Hosted on Vercel
-- **Backend:** Deployed on AWS EC2
+- **Backend:** Deployed on a local home server

@@ -42,7 +42,6 @@ const sendError = (error: AppError, req: Request, res: Response, _next: NextFunc
 };
 
 export const handler = (error: AppError, req: Request, res: Response, next: NextFunction): void => {
-  console.log('this==>', error);
   error.statusCode = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
   error.status = error.status || 'error';
   sendError(error, req, res, next);
