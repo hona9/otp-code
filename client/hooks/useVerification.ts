@@ -28,7 +28,7 @@ export function useVerification({
       return await verifyCode(verificationCode);
     },
     onSuccess: async (data) => {
-      if (data.success) {
+      if (data.status === "success") {
         setVerificationStatus("success");
         onStatusChange("success");
         await new Promise((resolve) => setTimeout(resolve, 400));
