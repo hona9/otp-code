@@ -2,6 +2,7 @@ import { useState, useCallback, RefObject } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { verifyCode } from "@/lib/api";
 import type { VerificationStatus } from "@/types";
+import axios, { AxiosError } from "axios";
 
 interface UseVerificationProps {
   onSuccess: () => void;
@@ -27,22 +28,35 @@ export function useVerification({
       return await verifyCode(verificationCode);
     },
     onSuccess: async (data) => {
-      if (data.status === "success") {
+      if (data.success) {
         setVerificationStatus("success");
         onStatusChange("success");
         await new Promise((resolve) => setTimeout(resolve, 400));
         onSuccess();
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       setVerificationStatus("error");
+      onStatusChange("error");
       setError(true);
       setCode(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
-      setErrorMessage(
-        error.response?.data?.message ||
-          "Invalid verification code. Please try again."
-      );
+
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+          setErrorMessage(
+            axiosError.response.data?.message ||
+              "Invalid verification code. Please try again."
+          );
+        } else if (axiosError.request) {
+          setErrorMessage("Internal server error. Please try again later.");
+        } else {
+          setErrorMessage("Something went wrong. Please try again.");
+        }
+      } else {
+        setErrorMessage("Internal server error. Please try again later.");
+      }
     },
   });
 
