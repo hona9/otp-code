@@ -77,6 +77,22 @@ export function useVerification({
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
+    // Allow direct number input
+    if (/^[0-9]$/.test(e.key)) {
+      e.preventDefault(); // Prevent default to handle it ourselves
+      const newCode = [...code];
+      newCode[index] = e.key;
+      setCode(newCode);
+      setError(false);
+
+      // Move to next input if not the last digit
+      if (index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
+      return;
+    }
+
+    // Handle other keys
     if (e.key === "Backspace") {
       if (!code[index]) {
         e.preventDefault();
@@ -100,17 +116,45 @@ export function useVerification({
     }
   };
 
-  const handlePaste = (event: React.ClipboardEvent) => {
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    // Prevent the default paste behavior
     event.preventDefault();
-    const pastedData = event.clipboardData
-      .getData("text")
-      .replace(/\D/g, "")
-      .slice(0, 6);
-    if (pastedData.length === 6) {
-      const newCode = pastedData.split("");
+
+    let pastedData: string;
+
+    // Handle both clipboard API and mobile paste events
+    if (event.clipboardData) {
+      pastedData = event.clipboardData.getData("text");
+    } else {
+      // Fallback for mobile devices
+      pastedData =
+        (event as any).nativeEvent?.clipboardData?.getData("text") || "";
+    }
+
+    // Clean the pasted data: remove non-digits and limit to 6 characters
+    const cleanedData = pastedData.replace(/\D/g, "").slice(0, 6);
+
+    // Only proceed if we have exactly 6 digits
+    if (cleanedData.length === 6) {
+      const newCode = cleanedData.split("");
       setCode(newCode);
       setError(false);
+      // Focus the last input after successful paste
       inputRefs.current[5]?.focus();
+    } else if (cleanedData.length > 0) {
+      // If we have some valid digits but not 6, fill what we can
+      const newCode = [...code];
+      cleanedData.split("").forEach((digit, index) => {
+        if (index < 6) {
+          newCode[index] = digit;
+        }
+      });
+      setCode(newCode);
+      setError(false);
+      // Focus the next empty input or the last input
+      const nextEmptyIndex = newCode.findIndex((digit) => digit === "");
+      const focusIndex = nextEmptyIndex === -1 ? 5 : nextEmptyIndex;
+      inputRefs.current[focusIndex]?.focus();
     }
   };
 
