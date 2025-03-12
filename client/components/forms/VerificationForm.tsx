@@ -132,7 +132,7 @@ export function VerificationForm({
                   Verifying...
                 </span>
               ) : (
-                "Verify Code"
+                "Submit"
               )}
             </button>
 
