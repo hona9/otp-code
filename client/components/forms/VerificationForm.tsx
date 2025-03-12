@@ -4,6 +4,7 @@ import { useVerification } from "@/hooks/useVerification";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import type { VerificationStatus } from "@/types";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 interface VerificationFormProps {
   onSuccess: () => void;
@@ -95,10 +96,8 @@ export function VerificationForm({
             </div>
 
             {(error || isError) && errorMessage && (
-              <div className="flex items-center gap-2 text-red-500 text-sm mb-4 animate-shake">
-                <div className="flex-shrink-0 w-4 h-4 rounded-full border-2 border-current flex items-center justify-center">
-                  <span className="font-bold text-xs">!</span>
-                </div>
+              <div className="flex items-center gap-1 text-red-500 text-sm mb-4 animate-shake">
+                <ExclamationCircleIcon className="h-5 w-5" />
                 <p>{errorMessage}</p>
               </div>
             )}
