@@ -2,6 +2,33 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import localFont from "next/font/local";
+
+const euclid = localFont({
+  src: [
+    {
+      path: "../public/fonts/Euclid Circular A Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Euclid Circular A Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Euclid Circular A SemiBold.ttf",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Euclid Circular A Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-euclid",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +51,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${euclid.variable}`}>
+      <body className="font-euclid">
         <Providers>{children}</Providers>
       </body>
     </html>

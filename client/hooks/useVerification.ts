@@ -63,10 +63,15 @@ export function useVerification({
   const handleChange = (index: number, value: string) => {
     if (!/^[0-9]?$/.test(value)) return;
 
+    // Clear error state when user starts typing
+    if (error) {
+      setError(false);
+      setErrorMessage("");
+    }
+
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
-    setError(false);
 
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
@@ -80,10 +85,16 @@ export function useVerification({
     // Allow direct number input
     if (/^[0-9]$/.test(e.key)) {
       e.preventDefault(); // Prevent default to handle it ourselves
+
+      // Clear error state when user starts typing
+      if (error) {
+        setError(false);
+        setErrorMessage("");
+      }
+
       const newCode = [...code];
       newCode[index] = e.key;
       setCode(newCode);
-      setError(false);
 
       // Move to next input if not the last digit
       if (index < 5) {

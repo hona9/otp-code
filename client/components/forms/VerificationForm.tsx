@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { useVerification } from "@/hooks/useVerification";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import type { VerificationStatus } from "@/types";
 
 interface VerificationFormProps {
@@ -58,7 +59,7 @@ export function VerificationForm({
         </div>
       ) : (
         <>
-          <p className="text-gray-600 text-center mb-8">
+          <p className="text-gray-600 text-center mb-4 opacity-80">
             Please enter the 6-digit code sent to your device
           </p>
 
@@ -93,10 +94,13 @@ export function VerificationForm({
               ))}
             </div>
 
-            {(error || isError) && (
-              <p className="text-red-500 text-sm mb-4 animate-shake">
-                {errorMessage}
-              </p>
+            {(error || isError) && errorMessage && (
+              <div className="flex items-center gap-2 text-red-500 text-sm mb-4 animate-shake">
+                <div className="flex-shrink-0 w-4 h-4 rounded-full border-2 border-current flex items-center justify-center">
+                  <span className="font-bold text-xs">!</span>
+                </div>
+                <p>{errorMessage}</p>
+              </div>
             )}
 
             {networkStatus !== "online" && (
@@ -124,31 +128,23 @@ export function VerificationForm({
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin h-5 w-5 mr-2"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
+                  <ArrowPathIcon className="animate-spin h-5 w-5 mr-2" />
                   Verifying...
                 </span>
               ) : (
                 "Verify Code"
               )}
             </button>
+
+            <p className="mt-4 text-gray-600 opacity-80">
+              Did not receive the code?{" "}
+              <a
+                href="#"
+                className="underline text-blue-600 hover:text-blue-800"
+              >
+                Resend
+              </a>
+            </p>
           </form>
         </>
       )}

@@ -15,8 +15,8 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          {status === "success" ? "Code Verified!" : "Enter Verification Code"}
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+          {status === "success" ? "Code Verified!" : "Verify Your Account"}
         </h2>
         <VerificationForm
           onSuccess={handleSuccess}
